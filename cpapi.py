@@ -98,7 +98,7 @@ class CPAPI:
             authError = False
             if hasattr(e, 'reason'):
                 print >> sys.stderr, "Failed to connect [%s] to '%s'" % (e.reason, url)
-            elif hasattr(e, 'code'):
+            if hasattr(e, 'code'):
                 msg = self.getHttpStatus(e.code)
                 print >> sys.stderr, "Failed to fetch events [%s] from '%s'" % (msg, url)
                 if (e.code == 401) or (e.code == 403):
