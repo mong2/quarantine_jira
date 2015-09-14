@@ -87,3 +87,6 @@ The script will starting reading events from the Halo account and matching each 
 
 *In the current version of the script, only Halo event names can be used to trigger automatic server quarantines. 
 
+<!---
+#CPTAGS:community-supported automation
+-->
