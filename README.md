@@ -89,4 +89,5 @@ The script will starting reading events from the Halo account and matching each 
 
 <!---
 #CPTAGS:community-supported automation
+#TBICON:images/python_icon.png
 -->
