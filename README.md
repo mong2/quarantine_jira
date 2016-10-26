@@ -1,91 +1,68 @@
 #Quarantine script
 
-Version: *1.0*
-<br />
+Version: *2.0*
+
 Author: *Apurv Singh* - *apurva@cloudpassage.com*
 
-The purpose of the quarantine script is to place a server instance(s) into an isolated firewall group if/when specified Halo events occur. This script can also be used to move a server instance into a 'remote analysis' group (for Forensics-Response investigation) or to a data capture group.
-You can use the script to manually quarantine servers or trigger server quarantines automatically, based on different criteria*. In either case, the script does the following:
+Updates (v2): *Ash Wilson* - *awilson@cloudpassage.com*
 
-* It creates a Halo Server Group called “Quarantine”
-* It creates a Linux firewall policy called “quarantine-linux”
-* It creates a Windows firewall policy called “quarantine-windows”
-* It applies the two firewall policies to the Quarantine server group
-* It moves the server in question to the Quarantine server group
+##Purpose
 
-Note: The firewall policies allow the server to communicate only to the Halo grid.
+This containerized application monitors the /v1/events endpoint in the Halo API,
+looking for specific events.  If a targeted event is matched, the tool will
+move the workload into the configured quarantine group.
 
+##How it works
+Targeted events are listed, one per line, in `/conf/target-events`.  Feel free
+to alter the file and rebuild the container, or mount in the config file from a
+persistent volume.
 
-##List of Files
+When the end of the events stream is reached, this tool will wait a few seconds
+and query again, over and over, until more events arrive.  If you do not set the
+`HALO_EVENTS_START` environment variable, the tool will start at the beginning
+of the current day.
 
-* name of script file
-* README.md -- This ReadMe file.
-* cputils.py
-* cpapi.py
-* cpfwpolicies.py
-* quarantine.auth
-* quarantine_filter.txt
-* quarantine-ng.py
-
-
-##Requirements and Dependencies
-
-To get started, you must have the following privileges and software resources:
-* An active CloudPassage Halo subscription. If you don't have one, Register for CloudPassage to receive your credentials and further instructions by email.
-* Access to your CloudPassage API key. Create a new key, with write privileges, specifically for use with this script.
-* Python 2.6 or later. You can download Python from here.
+The quarantine group is defined with the `$QUARANTINE_GROUP_NAME` environment
+variable.  If you don't define this environment variable, it is assumed to be
+"Quarantine". You should configure the group in your Halo account before you run
+this tool.  We recommend applying a firewall policy to the group that restricts
+all outbound traffic, and only allows inbound traffic from Ghostports users.
 
 
+##Running the tool
+Clone the code and build the container:
 
-##Installation 
+        git clone https://github.com/cloudpassage/quarantine
+        cd quarantine
+        docker build -t cloudpassage_quarantine .
 
-Once you have downloaded the script, make sure you make it executable by typing the following on the command line: chmod +x quarantine-ng.py
+Set these environment variables:
 
-##Usage
-To see detailed script usage, type the following on the command line:
-```
-$ ./quarantine-ng.py -?
-Usage: quarantine-ng.py [<flag>]... --stdin|--portal|<server>
-```
-Where <server> is the ID of a server to quarantine, and <flag> is one of:
-```
--?                              This message
--v                             	Make program verbose
---auth=<file>              	    Specify a file containing ID/secret pairs (up to 5)
---stdin                        	Read events from stdin
---portal                      	Read events from CP portal
-```
-
-If no server ID supplied on command line, script will accept events in JSON format, which are assumed to be events containing servers which should be quarantined. You must specify the source of the events, either --stdin or --portal.
+| Variable            | Purpose                                              |
+|---------------------|------------------------------------------------------|
+| HALO_API_KEY        | Halo API key ID (administrative privileges required) |
+| HALO_API_SECRET_KEY | Halo API key secret                                  |
+| HALO_QUARANTINE_GRP | Halo quarantine group name                           |
 
 
+Optionally, define these as well:
 
-If you want to manually quarantine a Halo managed cloud server, you can specify the server’s Halo server ID as a parameter to the script.  
+| Variable            | Purpose                                   |
+|---------------------|-------------------------------------------|
+| HALO_EVENTS_START   | ISO8601 timestamp for starting event      |
 
-To automatically quarantine servers based on certain security events on that server, do the following:
+Run the container:
 
-In the quarantine_filter.txt file, specify the name of events on which to trigger a server quarantine. Say for example, you wanted to automatically trigger a quarantine for a cloud server whose firewall had been modified locally, outside of Halo. In the quarantine_filter.txt file, you would specify an entry like this on it’s own line:
-```
-name=Server firewall modified
-```
+        docker run -d \
+        -e HALO_API_KEY=$HALO_API_KEY \
+        -e HALO_API_SECRET_KEY=$HALO_API_SECRET_KEY \
+        -e HALO_QUARANTINE_GROUP=$HALO_QUARANTINE_GROUP \
+        cloudpassage_quarantine
 
-where “Server firewall modified” is the name of the Halo event that is generated and logged in the event of a host firewall being modified locally, outside of Halo.
+Optionally, you can add `-v PATH_TO/target-events:/conf/target-events`,
+replacing `PATH_TO` with the path to the directory enclosing your customized
+`target-events` file.
 
-Then, run the script by typing the following command:
-```
-./quarantine-ng.py --auth=/etc/quarantine.auth --portal
-```
-
-Note: The quarantine script doesn’t yet support the --starting option, so if you want to pull events from point in time of your choosing, use the following command to quarantine:
-```
-./haloEvents.py --starting=<datetime> --kv | ./quarantine-ng.py --stdin -v 
-```
---auth specifies the file where the Halo API keys are specified<br />
---portal tells the script to read events from the Halo account specified in the file specified in the --auth option
-
-The script will starting reading events from the Halo account and matching each event against the events specified in the quarantine_filter.txt file. As soon as a match is found, the server in question will be quarantined. 
-
-*In the current version of the script, only Halo event names can be used to trigger automatic server quarantines. 
 
 <!---
 #CPTAGS:community-supported automation

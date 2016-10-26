@@ -1,5 +1,0 @@
-# This is a comment
-# Make sure to replace the event names below with the event(s) you want to trigger a quarantine on. Then uncomment the line(s) below.
-# You can add as many events as you want
-# name=Daemon compromised
-# name=Server firewall modified
