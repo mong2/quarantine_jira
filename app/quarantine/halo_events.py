@@ -19,6 +19,7 @@ class HaloEvents(object):
         self.last_event_timestamp = None
         self.events = []
         self.halo_session = None
+        self.ua_string = config.ua_string
 
     def __iter__(self):
         while True:
@@ -47,10 +48,9 @@ class HaloEvents(object):
         return sorted_list
 
     def build_halo_session(self):
-        user_agent = "Toolbox: Quarantine v2.0"
         halo_session = cloudpassage.HaloSession(self.halo_key,
                                                 self.halo_secret,
-                                                user_agent=user_agent)
+                                                user_agent=self.ua_string)
         return halo_session
 
     def create_url_list(self):

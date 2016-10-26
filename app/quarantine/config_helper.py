@@ -1,11 +1,10 @@
-import cloudpassage
 from datetime import date
 import os
 import re
-import sys
 
 
 class ConfigHelper(object):
+    """Manage all configuration information for the application"""
     def __init__(self):
         self.halo_key = os.getenv("HALO_API_KEY")
         self.halo_secret = os.getenv("HALO_API_SECRET_KEY")
@@ -13,6 +12,7 @@ class ConfigHelper(object):
                                              "Quarantine")
         self.match_list = ConfigHelper.get_match_list("/conf/target-events")
         self.start_timestamp = ConfigHelper.get_timestamp()
+        self.ua_string = "Toolbox: Quarantine v2.0"
         self.max_threads = 10
         self.halo_batch_size = 20
 
