@@ -33,10 +33,11 @@ all outbound traffic, and only allows inbound traffic from Ghostports users.
 * Make sure that your policies are configured to create events on failure.
 * You'll need an administrative (read + write) API key for your Halo account.
 * You'll need to have Docker installed.
-* Create a quarantine group in your Halo account, with the appropriately restrictive firewall rules.
+* Create a quarantine group in your Halo account, with the appropriately
+restrictive firewall rules.
 
 
-## Running the tool
+## Using the tool
 Clone the code and build the container:
 
         git clone https://github.com/cloudpassage/quarantine
@@ -58,13 +59,30 @@ Optionally, define these as well:
 |---------------------|-------------------------------------------|
 | HALO_EVENTS_START   | ISO8601 timestamp for starting event      |
 
-Run the container:
+
+To run the container interactively (foreground):
+
+        docker run -it \
+        -e HALO_API_KEY=$HALO_API_KEY \
+        -e HALO_API_SECRET_KEY=$HALO_API_SECRET_KEY \
+        -e HALO_QUARANTINE_GROUP=$HALO_QUARANTINE_GROUP \
+        cloudpassage_quarantine
+
+
+If you want to run quarantine in the background, you can start it like this:
 
         docker run -d \
         -e HALO_API_KEY=$HALO_API_KEY \
         -e HALO_API_SECRET_KEY=$HALO_API_SECRET_KEY \
         -e HALO_QUARANTINE_GROUP=$HALO_QUARANTINE_GROUP \
         cloudpassage_quarantine
+
+
+Use `docker ps` to make sure it's running.  The container logs will be updated
+with the last event's timestamp after every batch runs, so running
+`docker logs -f CONTAINER_NAME` will allow you to watch the quarantine tool's
+progress while consuming your events stream.
+
 
 Optionally, you can add `-v PATH_TO/target-events:/conf/target-events`,
 replacing `PATH_TO` with the path to the directory enclosing your customized
