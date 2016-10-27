@@ -6,9 +6,10 @@ class HaloGeneral(object):
     """This class wraps Halo API functionality, except for /v1/events."""
     def __init__(self, config):
         """Pass in a quarantine.ConfigHelper object on instantiation."""
+        self.ua = config.ua_string
         self.session = cloudpassage.HaloSession(config.halo_key,
                                                 config.halo_secret,
-                                                user_agent=config.ua_string)
+                                                integration_string=self.ua)
         self.server_obj = cloudpassage.Server(self.session)
         self.event_obj = cloudpassage.Event(self.session)
         self.group_obj = cloudpassage.ServerGroup(self.session)

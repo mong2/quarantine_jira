@@ -19,7 +19,7 @@ class HaloEvents(object):
         self.last_event_timestamp = None
         self.events = []
         self.halo_session = None
-        self.ua_string = config.ua_string
+        self.ua = config.ua_string
 
     def __iter__(self):
         while True:
@@ -50,7 +50,7 @@ class HaloEvents(object):
     def build_halo_session(self):
         halo_session = cloudpassage.HaloSession(self.halo_key,
                                                 self.halo_secret,
-                                                user_agent=self.ua_string)
+                                                integration_string=self.ua)
         return halo_session
 
     def create_url_list(self):
