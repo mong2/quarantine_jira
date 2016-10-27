@@ -17,7 +17,7 @@ RUN pip install -r /etc/requirements.txt
 
 
 # If tests don't pass, don't build the container...
-RUN cd /app/test && \
-    py.test -v
+RUN cd /app && \
+    sh ./run_tests.sh
 
 CMD python /app/runner.py
