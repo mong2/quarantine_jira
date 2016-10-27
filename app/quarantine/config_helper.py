@@ -29,9 +29,10 @@ class ConfigHelper(object):
 
     @classmethod
     def get_timestamp(cls):
-        env_time = os.getenv("HALO_EVENTS_START")
+        env_time = os.getenv("HALO_EVENTS_START", "")
         if env_time == "":
             env_time = ConfigHelper.iso8601_today()
+        return env_time
 
     @classmethod
     def iso8601_today(cls):
