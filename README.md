@@ -27,6 +27,15 @@ variable.  If you don't define this environment variable, it is assumed to be
 this tool.  We recommend applying a firewall policy to the group that restricts
 all outbound traffic, and only allows inbound traffic from Ghostports users.
 
+## Prerequisites
+
+* You'll need an account with CloudPassage Halo.
+* Make sure that your policies are configured to create events on failure.
+* You'll need an administrative (read + write) API key for your Halo account.
+* You'll need to have Docker installed.
+* Create a quarantine group in your Halo account, with the appropriately restrictive firewall rules.
+
+
 ## Running the tool
 Clone the code and build the container:
 
