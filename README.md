@@ -14,7 +14,8 @@ move the workload into the configured quarantine group.
 ## How it works
 Targeted events are listed, one per line, in `/conf/target-events`.  Feel free
 to alter the file and rebuild the container, or mount in the config file from a
-persistent volume.
+persistent volume.  Event types produced by Halo can be found here:
+https://api-doc.cloudpassage.com/help#event-types
 
 When the end of the events stream is reached, this tool continue to query
 until more events arrive.  If you do not set the `HALO_EVENTS_START`
