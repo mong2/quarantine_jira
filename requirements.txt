@@ -1,2 +1,4 @@
 cloudpassage
 multiprocessing
+pytest>=2.8
+pytest-flake8>=0.1

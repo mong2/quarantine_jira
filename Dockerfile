@@ -15,4 +15,9 @@ COPY requirements.txt /etc/requirements.txt
 
 RUN pip install -r /etc/requirements.txt
 
+
+# If tests don't pass, don't build the container...
+RUN cd /app/test && \
+    py.test -v
+
 CMD python /app/runner.py
