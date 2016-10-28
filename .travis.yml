@@ -1,0 +1,8 @@
+sudo: required
+services:
+- docker
+script:
+- docker build -t $DOCKER_IMAGE .
+env:
+  global:
+  - DOCKER_IMAGE="cloudpassage/quarantine"
