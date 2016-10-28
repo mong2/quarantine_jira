@@ -4,6 +4,14 @@ Changelog
 v2.0
 ----
 
+- Correcting style fail W391 in __init__.py. [Ash Wilson]
+
+- Adding CHANGELOG.md. [Ash Wilson]
+
+- Adding gitchangelog config file. [Ash Wilson]
+
+- Adding version and author info to __init__.py. [Ash Wilson]
+
 - Adding travis-ci badges to README. [Ash Wilson]
 
 - Adding travis-ci config. [Ash Wilson]
