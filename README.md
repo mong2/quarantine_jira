@@ -2,6 +2,10 @@
 
 Version: *2.0*
 
+Master branch: [![Build Status](https://travis-ci.org/cloudpassage/quarantine.svg?branch=master)](https://travis-ci.org/cloudpassage/quarantine)
+
+Develop branch: [![Build Status](https://travis-ci.org/cloudpassage/quarantine.svg?branch=develop)](https://travis-ci.org/cloudpassage/quarantine)
+
 Author: *Apurv Singh* - *apurva@cloudpassage.com*
 
 Updates (v2): *Ash Wilson* - *awilson@cloudpassage.com*
