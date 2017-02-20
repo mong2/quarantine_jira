@@ -1,19 +1,14 @@
-# Quarantine
+# Quarantine-Jira
 
-Version: *2.0*
+Version: *1.0*
 
-Master branch: [![Build Status](https://travis-ci.org/cloudpassage/quarantine.svg?branch=master)](https://travis-ci.org/cloudpassage/quarantine)
-
-Develop branch: [![Build Status](https://travis-ci.org/cloudpassage/quarantine.svg?branch=develop)](https://travis-ci.org/cloudpassage/quarantine)
-
-Author: *Apurv Singh* - *apurva@cloudpassage.com*
-
-Updates (v2): *Ash Wilson* - *awilson@cloudpassage.com*
+Fork from: https://github.com/cloudpassage/quarantine.git
 
 ## Purpose
 This containerized application monitors the /v1/events endpoint in the Halo API,
 looking for specific events.  If a targeted event is matched, the tool will
-move the workload into the configured quarantine group.
+move the workload into the configured quarantine group or create a JIRA ticket with 
+event information.
 
 ## How it works
 Targeted events are listed, one per line, in `/conf/target-events`.  Feel free
@@ -37,6 +32,7 @@ all outbound traffic, and only allows inbound traffic from Ghostports users.
 * Make sure that your policies are configured to create events on failure.
 * You'll need an administrative (read + write) API key for your Halo account.
 * You'll need to have Docker installed.
+* You'll need a JIRA account
 * Create a quarantine group in your Halo account, with the appropriately
 restrictive firewall rules.
 
@@ -44,9 +40,11 @@ restrictive firewall rules.
 ## Using the tool
 Clone the code and build the container:
 
-        git clone https://github.com/cloudpassage/quarantine
-        cd quarantine
+        git clone https://github.com/mong2/quarantine_jira
+        cd quarantine_jira
         docker build -t cloudpassage_quarantine .
+        
+Configure your JIRA information in `configs/config.yml`
 
 Set these environment variables:
 
