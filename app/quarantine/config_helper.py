@@ -10,7 +10,7 @@ class ConfigHelper(object):
         self.halo_secret = os.getenv("HALO_API_SECRET_KEY")
         self.quarantine_grp_name = os.getenv("$QUARANTINE_GROUP_NAME",
                                              "Quarantine")
-        self.match_list = ConfigHelper.get_match_list("/conf/target-events")
+        self.match_list = ConfigHelper.get_match_list("../target-events")
         self.start_timestamp = ConfigHelper.get_timestamp()
         self.ua_string = "Halo-Toolbox-Quarantine/2.0"
         self.max_threads = 10
