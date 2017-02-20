@@ -1,6 +1,0 @@
-jira:
-  url: 'https://cptest180.atlassian.net/'
-  user: 'hlee@cloudpassage.com'
-  passwd: 'Cloudp@ssage2016'
-  project_key: 'CS'
-  issue_name: 'Bug'
