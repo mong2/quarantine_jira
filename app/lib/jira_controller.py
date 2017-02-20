@@ -17,7 +17,7 @@ class JiraController(object):
     				"key": self.config['project_key']
     			},
     			"summary": "%s on %s" % (event['name'], event['server_hostname']),
-    			"description": "Creating this issue based on a triggered event in Halo\n %s" % (json.dumps(event, indent=2)),
+    			"description": "Creating this issue based on a triggered event in Halo\n {code}%s{code}" % (json.dumps(event, indent=2)),
     			"issuetype": {
     				"name": self.config['issue_name']
     			}
