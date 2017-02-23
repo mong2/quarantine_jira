@@ -17,10 +17,11 @@ jira = lib.JiraController()
 
 # Iterate over events, quarantine targeted workloads
 
-while True:
+count = 0
+while count < 6:
     for event in events:
         if matcher.is_a_match(event["type"]):
             print "Quarantining workload: %s" % event["server_id"]
-            jira.create_ticket(event)
-            exit()
+            jira.check_ticket_existence(event)
+            count += 1
             # halo.quarantine_workload(event["server_id"])
