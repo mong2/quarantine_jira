@@ -1,6 +1,0 @@
-jira:
-  url: ''
-  user: ''
-  passwd: ''
-  project_key: 'OPS'
-  isssue_name: 'Bug'
