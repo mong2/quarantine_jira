@@ -3,4 +3,4 @@ jira:
   user: ''
   passwd: ''
   project_key: 'OPS'
-  isssue_name: 'Bug'
+  issue_name: 'Bug'
