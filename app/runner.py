@@ -21,6 +21,6 @@ while True:
         if matcher.is_a_match(event["type"]):
             issue_key = jira.check_ticket_existence(event)
             if event["type"] == "issue_resolved" and issue_key:
-                jira.issue_resolved(issue_id)
+                jira.issue_resolved(issue_key)
             elif event["type"] == "vulnerable_software_package_found" and not issue_key:
                 jira.create_ticket(event)
