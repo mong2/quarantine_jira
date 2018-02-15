@@ -4,3 +4,16 @@ jira:
   passwd: ''
   project_key: 'OPS'
   issue_name: 'Bug'
+  severity_criteria:
+    Critical: 9,
+    Major: 7,
+    Minor: 4,
+    Trivial: 1
+  resolution_workflow:
+    fields:
+      assignee:
+        name:
+      resolution:
+        name:
+    transition:
+      name:

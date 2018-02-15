@@ -19,7 +19,8 @@ class JiraApi(object):
 
     def post(self, endpoint, data):
         resp = requests.post(self.url(endpoint), auth=(self.auth), headers=self.headers, data=data)
-        if resp.status_code != 201:
+        if resp.status_code != 201 or resp.status_code != 204:
             print('Status:', resp.status_code, 'Problem with the post request. Exiting')
             exit()
         return resp.json()
+

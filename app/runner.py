@@ -3,7 +3,6 @@ import lib
 
 # Build config
 config = quarantine.ConfigHelper()
-
 # Halo object
 halo = quarantine.HaloGeneral(config)
 
@@ -20,7 +19,8 @@ jira = lib.JiraController()
 while True:
     for event in events:
         if matcher.is_a_match(event["type"]):
-            print "Quarantining workload: %s" % event["server_id"]
-            jira.create_ticket(event)
-            exit()
-            # halo.quarantine_workload(event["server_id"])
+            issue_key = jira.check_ticket_existence(event)
+            if event["type"] == "issue_resolved" and issue_key:
+                jira.issue_resolved(issue_id)
+            elif event["type"] == "vulnerable_software_package_found" and not issue_key:
+                jira.create_ticket(event)
