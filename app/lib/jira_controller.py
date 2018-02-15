@@ -1,5 +1,6 @@
 from jira_lib import JiraApi
 from config import CONFIG
+import re
 import json
 
 class JiraController(object):
@@ -13,10 +14,15 @@ class JiraController(object):
         return JiraApi().get("/rest/api/2/issue/%s" % (ticket_id))
 
     def form_key(self, event):
-        if event['type'] == 'vulnerable_software_package_found':
-            summary = "Halo Alert -- Vulnerable package:%s on %s" % (event['package_name'], event['server_hostname'])
+        if event['type'] == 'issue_resolved':
+            if 'SVA' in event['message']:
+                m = re.search("Vulnerable package: <strong>(.*)</strong>", event["message"])
+                if m:
+                    package_name = m.group(1)
         else:
-            summary = "Halo Alert -- %s on %s" % (event['name'],event['server_hostname'])
+            package_name = event["package_name"]
+
+        summary = "Halo Alert -- Vulnerable package:%s on %s" % (package_name, event['server_hostname'])
         return summary
 
     def form_ticket(self, event, summary):
