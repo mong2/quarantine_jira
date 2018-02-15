@@ -50,6 +50,10 @@ class JiraController(object):
         }
         return json.dumps(data, indent=2)
 
+    def exist_in_jira(self, summary):
+        endpoint = "/rest/api/2/search?jql=summary~%s" % summary
+        return JiraApi().get(endpoint)
+
     def set_priority(self, cves):
         max_cvss = max(cves, key=lambda d: d['CVSS'])['CVSS']
         criticality = [k for (k,v) in self.severity.items() if v >= max_cvss]
@@ -58,7 +62,10 @@ class JiraController(object):
     def check_ticket_existence(self, event):
         summary = self.form_key(event)
         if summary not in self.existing_tickets.keys():
-            return False, summary
+            if exist_in_jira(summary):
+                self.existing_tickets[summary] = resp["issues"]["key"]
+            else:
+                return False, summary
         return True, self.existing_tickets[summary]
 
     def create_ticket(self, event, summary):
