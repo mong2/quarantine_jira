@@ -52,8 +52,8 @@ class JiraController(object):
     def check_ticket_existence(self, event):
         summary = self.form_key(event)
         if summary not in self.existing_tickets.keys():
-            return False
-        return self.existing_tickets[summary]
+            return False, summary
+        return True, self.existing_tickets[summary]
 
     def create_ticket(self, event, summary):
         resp = JiraApi().post("/rest/api/2/issue/", self.form_ticket(event, summary))
