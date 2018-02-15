@@ -15,14 +15,15 @@ class JiraController(object):
 
     def form_key(self, event):
         if event['type'] == 'issue_resolved':
+            print 'found resolved event %s ' % event
             if 'SVA' in event['message']:
-                m = re.search("Vulnerable package: <strong>(.*)</strong>", event["message"])
+                m = re.search("Vulnerable package: (.*)\.[A-Z]", event["message"])
                 if m:
                     package_name = m.group(1)
         else:
             package_name = event["package_name"]
 
-        summary = "Halo Alert -- Vulnerable package:%s on %s" % (package_name, event['server_hostname'])
+        summary = "Halo Alert: Vulnerable package:%s on %s" % (package_name, event['server_hostname'])
         return summary
 
     def form_ticket(self, event, summary):
@@ -45,13 +46,15 @@ class JiraController(object):
         return json.dumps(data, indent=2)
 
     def updated_form(self):
+        # print self.config['resolution_workflow']
+        # data = self.config["resolution_workflow"]
         data = {
-            "update": self.config["resolution_workflow"]
+            "transition": {"id": "10000"}
         }
         return json.dumps(data, indent=2)
 
     def exist_in_jira(self, summary):
-        endpoint = "/rest/api/2/search?jql=summary~%s" % summary
+        endpoint = "/rest/api/2/search?jql=summary~'%s'" % (summary)
         return JiraApi().get(endpoint)
 
     def set_priority(self, cves):
@@ -62,8 +65,9 @@ class JiraController(object):
     def check_ticket_existence(self, event):
         summary = self.form_key(event)
         if summary not in self.existing_tickets.keys():
-            if exist_in_jira(summary):
-                self.existing_tickets[summary] = resp["issues"]["key"]
+            resp = self.exist_in_jira(summary)
+            if resp['issues']:
+                self.existing_tickets[summary] = resp["issues"][0]["key"]
             else:
                 return False, summary
         return True, self.existing_tickets[summary]
@@ -74,5 +78,5 @@ class JiraController(object):
         return None
 
     def resolved_ticket(self, issuekey):
-        endpoint = "/rest/api/2/issue/%s" % issuekey
+        endpoint = "/rest/api/2/issue/%s/transitions?expand=transitions.fields" % issuekey
         return JiraApi().post(endpoint, self.updated_form())

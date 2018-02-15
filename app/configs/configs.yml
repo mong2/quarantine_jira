@@ -1,19 +1,15 @@
 jira:
-  url: ''
-  user: ''
-  passwd: ''
-  project_key: 'OPS'
+  url: 'https://jyelee.atlassian.net'
+  user: 'admin'
+  passwd: 'Foobar123'
+  project_key: 'TEST'
   issue_name: 'Bug'
   severity_criteria:
-    Critical: 9,
-    Major: 7,
-    Minor: 4,
-    Trivial: 1
+    Highest: 9,
+    High: 7,
+    Medium: 4,
+    Low: 1
   resolution_workflow:
     fields:
-      assignee:
-        name:
       resolution:
-        name:
-    transition:
-      name:
+        name: Done
