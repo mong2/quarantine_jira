@@ -48,8 +48,14 @@ class JiraController(object):
     def updated_form(self):
         # print self.config['resolution_workflow']
         # data = self.config["resolution_workflow"]
+        # data = {
+        #     "transition": {"id": "10000"}
+        # }
         data = {
-            "transition": {"id": "10000"}
+            "update": {},
+            "transition": {
+                "id": "31"
+            }
         }
         return json.dumps(data, indent=2)
 
@@ -78,5 +84,5 @@ class JiraController(object):
         return None
 
     def resolved_ticket(self, issuekey):
-        endpoint = "/rest/api/2/issue/%s/transitions?expand=transitions.fields" % issuekey
+        endpoint = "/rest/api/2/issue/%s/transitions?expand=transitions.fields&transitionId=31" % issuekey
         return JiraApi().post(endpoint, self.updated_form())
