@@ -9,13 +9,10 @@ class JiraController(object):
         self.existing_tickets = {}
         self.summary = ""
         self.severity = self.config['severity_criteria']
+        self.reopen = self.config['reopen']
 
-    def show_ticket(self, ticket_id):
-        return JiraApi().get("/rest/api/2/issue/%s" % (ticket_id))
-
-    def form_key(self, event):
+    def form_summary(self, event):
         if event['type'] == 'issue_resolved':
-            print 'found resolved event %s ' % event
             if 'SVA' in event['message']:
                 m = re.search("Vulnerable package: (.*)\.[A-Z]", event["message"])
                 if m:
@@ -45,18 +42,11 @@ class JiraController(object):
         }
         return json.dumps(data, indent=2)
 
-    def updated_form(self):
-        # print self.config['resolution_workflow']
-        # data = self.config["resolution_workflow"]
-        # data = {
-        #     "transition": {"id": "10000"}
-        # }
-        data = {
-            "update": {},
-            "transition": {
-                "id": "31"
-            }
-        }
+    def updated_form(self, comment=False):
+        if comment:
+            data = self.config['resolution_workflow']['comment']
+        else:
+            data = {k:v for k,v in self.config['resolution_workflow'].items() if k in 'transition'}
         return json.dumps(data, indent=2)
 
     def exist_in_jira(self, summary):
@@ -69,7 +59,7 @@ class JiraController(object):
         return criticality[0]
 
     def check_ticket_existence(self, event):
-        summary = self.form_key(event)
+        summary = self.form_summary(event)
         if summary not in self.existing_tickets.keys():
             resp = self.exist_in_jira(summary)
             if resp['issues']:
@@ -83,6 +73,9 @@ class JiraController(object):
         self.existing_tickets[summary] = resp["key"]
         return None
 
-    def resolved_ticket(self, issuekey):
-        endpoint = "/rest/api/2/issue/%s/transitions?expand=transitions.fields&transitionId=31" % issuekey
-        return JiraApi().post(endpoint, self.updated_form())
+    def transition_ticket(self, issuekey):
+        trans_endpoint = "/rest/api/2/issue/%s/transitions?expand=transitions.fields" % issuekey
+        comment_endpoint = "/rest/api/2/issue/%s/comment" % issuekey
+        JiraApi().post(comment_endpoint, self.updated_form(comment=True))
+        JiraApi().post(trans_endpoint, self.updated_form())
+        return None

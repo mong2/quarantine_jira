@@ -10,6 +10,7 @@ jira:
     Medium: 4,
     Low: 1
   resolution_workflow:
-    fields:
-      resolution:
-        name: Done
+    comment:
+      body: "Ticket is resolved based on seurity events in CloudPassage"
+    transition:
+      id: 31
