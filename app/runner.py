@@ -22,5 +22,5 @@ while True:
             exist, summary = jira.check_ticket_existence(event)
             if event["type"] == "issue_resolved" and exist:
                 jira.transition_ticket(summary)
-            elif event["type"] == "vulnerable_software_package_found" and not exist:
+            elif event["type"] != "issue_resolved" and not exist:
                 jira.create_ticket(event, summary)

@@ -1,14 +1,19 @@
 jira:
-  url: 'https://jyelee.atlassian.net'
+  url: 'https://cloudpassagecs.atlassian.net'
   user: 'admin'
   passwd: 'Foobar123'
-  project_key: 'TEST'
+  project_key: 'CS'
   issue_name: 'Bug'
-  severity_criteria:
-    Highest: 9,
-    High: 7,
-    Medium: 4,
+  auto_resolved: True
+  supress_threshold: 4
+  sva_severity:
+    Highest: 9
+    High: 7
+    Medium: 4
     Low: 1
+  event_severity:
+    critical: High
+    non_critical: Low
   resolution_workflow:
     comment:
       body: "Ticket is resolved based on seurity events in CloudPassage"
